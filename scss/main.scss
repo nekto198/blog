@@ -646,7 +646,7 @@ img {
 }
 
 .post-page__cover {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   border-radius: $radius;
   overflow: hidden;
   border: 1px solid $border;
@@ -670,10 +670,6 @@ img {
 
 .post-page__body {
   margin-top: 1.5rem;
-}
-
-.post-page__cover {
-  margin-bottom: 0;
 }
 
 .post-page__content {
