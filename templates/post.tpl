@@ -10,24 +10,24 @@
             </div>
         {/if}
 
-        <h1 class="page-title">{$post.title}</h1>
-
-        <div class="post-page__meta">
-            <time datetime="{$post.created_at}">{$post.created_at|date_format:"%d.%m.%Y %H:%M"}</time>
-            <span>{$post.views} просмотров</span>
-            {foreach $categories as $cat}
-                {if $cat@first}<span class="post-page__cats">{/if}
-                <a href="/{$cat.slug}">{$cat.name}</a>{if !$cat@last}, {/if}
-                {if $cat@last}</span>{/if}
-            {/foreach}
-        </div>
-
-        {if $post.description}
-            <p class="lead">{$post.description}</p>
-        {/if}
-
         <div class="content-with-sidebar post-page__body">
             <div class="content-with-sidebar__main">
+                <h1 class="page-title">{$post.title}</h1>
+
+                <div class="post-page__meta">
+                    <time datetime="{$post.created_at}">{$post.created_at|date_format:"%d.%m.%Y %H:%M"}</time>
+                    <span>{$post.views} просмотров</span>
+                    {foreach $categories as $cat}
+                        {if $cat@first}<span class="post-page__cats">{/if}
+                        <a href="/{$cat.slug}">{$cat.name}</a>{if !$cat@last}, {/if}
+                        {if $cat@last}</span>{/if}
+                    {/foreach}
+                </div>
+
+                {if $post.description}
+                    <p class="lead">{$post.description}</p>
+                {/if}
+
                 <div class="post-page__content">{$post.content nofilter}</div>
             </div>
 
