@@ -7,13 +7,13 @@ declare(strict_types=1);
  * Usage: php database/seed.php
  */
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__) . '/bootstrap.php';
 
 use App\Database;
 use App\Helpers\Slugger;
 
 $pdo = Database::getConnection();
-$uploadsDir = dirname(__DIR__) . '/public/uploads';
+$uploadsDir = BASE_PATH . '/public/uploads';
 
 if (!is_dir($uploadsDir)) {
     mkdir($uploadsDir, 0775, true);

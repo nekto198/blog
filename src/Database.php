@@ -14,7 +14,7 @@ class Database
     public static function getConnection(): PDO
     {
         if (self::$pdo === null) {
-            $config = require dirname(__DIR__) . '/config/database.php';
+            $config = Config::get('database');
 
             $dsn = sprintf(
                 'mysql:host=%s;port=%s;dbname=%s;charset=%s',

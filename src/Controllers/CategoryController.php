@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Config;
 use App\Helpers\View;
 use App\Models\Category;
 use App\Models\Post;
@@ -12,7 +13,6 @@ class CategoryController
 {
     public function show(string $slug): void
     {
-        $app = require dirname(__DIR__, 2) . '/config/app.php';
         $categoryModel = new Category();
         $postModel = new Post();
 
@@ -25,7 +25,7 @@ class CategoryController
 
         $sort = ($_GET['sort'] ?? 'date') === 'views' ? 'views' : 'date';
         $page = max(1, (int) ($_GET['page'] ?? 1));
-        $perPage = (int) $app['posts_per_page'];
+        $perPage = (int) Config::get('app.posts_per_page');
         $categoryId = (int) $category['id'];
 
         $total = $postModel->countByCategory($categoryId);

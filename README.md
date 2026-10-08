@@ -44,9 +44,10 @@ npm run build:css
 ## Структура
 
 ```
+bootstrap.php # единая точка входа (autoload)
 public/       # document root (index.php, assets, uploads)
 config/       # app + database
-src/          # Router, Database, Controllers, Models, Helpers
+src/          # Router, Config, Database, Controllers, Models, Helpers
 templates/    # Smarty
 database/     # schema.sql, seed.php
 docker/       # PHP и Nginx

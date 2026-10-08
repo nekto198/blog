@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
+use App\Config;
 use App\Helpers\View;
 use App\Models\Category;
 use App\Models\Post;
@@ -12,7 +13,6 @@ class PostController
 {
     public function show(string $categorySlug, string $postSlug): void
     {
-        $app = require dirname(__DIR__, 2) . '/config/app.php';
         $categoryModel = new Category();
         $postModel = new Post();
 
@@ -34,7 +34,10 @@ class PostController
         $post['views'] = (int) $post['views'] + 1;
 
         $categories = $postModel->getCategories($postId);
-        $related = $postModel->getRelated($postId, (int) $app['related_posts_limit']);
+        $related = $postModel->getRelated(
+            $postId,
+            (int) Config::get('app.related_posts_limit')
+        );
         $adjacent = $postModel->getAdjacentInCategory(
             $postId,
             (int) $category['id'],
