@@ -45,6 +45,10 @@ class CategoryController
             'page' => $page,
             'totalPages' => $totalPages,
             'total' => $total,
+            'breadcrumbs' => [
+                ['label' => 'Главная', 'url' => '/'],
+                ['label' => $category['name'], 'url' => null],
+            ],
         ]);
     }
 }

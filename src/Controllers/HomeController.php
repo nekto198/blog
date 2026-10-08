@@ -32,6 +32,9 @@ class HomeController
         (new View())->render('home.tpl', [
             'pageTitle' => 'Главная',
             'sections' => $sections,
+            'breadcrumbs' => [
+                ['label' => 'Главная', 'url' => null],
+            ],
         ]);
     }
 }

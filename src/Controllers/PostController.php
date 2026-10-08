@@ -49,6 +49,11 @@ class PostController
             'related' => $related,
             'prevPost' => $adjacent['previous'],
             'nextPost' => $adjacent['next'],
+            'breadcrumbs' => [
+                ['label' => 'Главная', 'url' => '/'],
+                ['label' => $category['name'], 'url' => '/' . $category['slug']],
+                ['label' => $post['title'], 'url' => null],
+            ],
         ]);
     }
 }

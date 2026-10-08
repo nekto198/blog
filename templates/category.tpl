@@ -4,6 +4,7 @@
     <div class="content-with-sidebar">
         <div class="content-with-sidebar__main">
             <div class="category-page">
+                {include file='partials/breadcrumbs.tpl'}
                 <h1 class="page-title">{$category.name}</h1>
                 {if $category.description}
                     <p class="lead">{$category.description}</p>

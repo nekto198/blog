@@ -361,6 +361,46 @@ img {
   font-size: 0.95rem;
 }
 
+.breadcrumbs {
+  margin: 0 0 1.1rem;
+}
+.breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.88rem;
+  color: #6b6560;
+}
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.breadcrumbs li:not(:last-child)::after {
+  content: "/";
+  color: #b0a89f;
+}
+.breadcrumbs a {
+  color: #6b6560;
+}
+.breadcrumbs a:hover {
+  color: #2f5d50;
+}
+.breadcrumbs span {
+  color: #1f1c19;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(100%, 28rem);
+}
+
 .page-title {
   margin: 0 0 0.75rem;
   font-size: clamp(1.8rem, 3vw, 2.4rem);

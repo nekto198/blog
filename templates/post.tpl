@@ -4,6 +4,7 @@
     <div class="content-with-sidebar">
         <div class="content-with-sidebar__main">
             <article class="post-page">
+                {include file='partials/breadcrumbs.tpl'}
                 {if $post.image}
                     <div class="post-page__cover">
                         <img src="{$post.image}" alt="{$post.title}">

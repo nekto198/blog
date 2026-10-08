@@ -1,6 +1,7 @@
 {extends file='layouts/main.tpl'}
 
 {block name='content'}
+    {include file='partials/breadcrumbs.tpl'}
     <h1 class="page-title">Категории</h1>
 
     {foreach $sections as $section}
