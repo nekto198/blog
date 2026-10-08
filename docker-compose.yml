@@ -2,7 +2,7 @@ services:
   nginx:
     image: nginx:1.25-alpine
     ports:
-      - "8080:80"
+      - "8088:80"
     volumes:
       - ./:/var/www/html
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
@@ -29,7 +29,7 @@ services:
       MYSQL_USER: blog
       MYSQL_PASSWORD: blog
     ports:
-      - "3307:3306"
+      - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
