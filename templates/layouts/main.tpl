@@ -13,8 +13,11 @@
     <header class="site-header">
         <div class="container">
             <a href="/" class="logo">{$appName}</a>
-            <nav>
+            <nav class="site-nav">
                 <a href="/">Главная</a>
+                {foreach $menuCategories as $menuCategory}
+                    <a href="/{$menuCategory.slug}">{$menuCategory.name}</a>
+                {/foreach}
             </nav>
         </div>
     </header>

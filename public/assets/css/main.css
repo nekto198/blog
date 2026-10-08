@@ -52,10 +52,32 @@ img {
   font-weight: 700;
   color: #1f1c19;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
 }
 .logo:hover {
   color: #2f5d50;
   text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem 1rem;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.95rem;
+}
+.site-nav a {
+  color: #1f1c19;
+}
+.site-nav a:hover {
+  color: #2f5d50;
+  text-decoration: none;
+}
+
+.site-header .container {
+  gap: 1rem;
 }
 
 .site-main {

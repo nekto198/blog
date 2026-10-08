@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Helpers;
 
+use App\Models\Category;
 use Smarty\Smarty;
 
 class View
@@ -22,6 +23,7 @@ class View
 
         $app = require $root . '/config/app.php';
         $this->smarty->assign('appName', $app['name']);
+        $this->smarty->assign('menuCategories', (new Category())->findWithPosts());
     }
 
     public function render(string $template, array $data = []): void

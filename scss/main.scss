@@ -66,11 +66,35 @@ img {
   font-weight: 700;
   color: $text;
   letter-spacing: 0.02em;
+  flex-shrink: 0;
 
   &:hover {
     color: $accent;
     text-decoration: none;
   }
+}
+
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem 1rem;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-size: 0.95rem;
+
+  a {
+    color: $text;
+
+    &:hover {
+      color: $accent;
+      text-decoration: none;
+    }
+  }
+}
+
+.site-header .container {
+  gap: 1rem;
 }
 
 .site-main {
