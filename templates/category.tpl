@@ -15,7 +15,7 @@
                href="/category/{$category.id}?sort=views">По просмотрам</a>
         </div>
 
-        {if $posts|@count == 0}
+        {if $total == 0}
             <p class="empty">В этой категории пока нет статей.</p>
         {else}
             <div class="posts-grid">
@@ -23,26 +23,26 @@
                     {include file='partials/post-card.tpl' post=$post}
                 {/foreach}
             </div>
+        {/if}
 
-            {if $totalPages > 1}
-                <nav class="pagination" aria-label="Пагинация">
-                    {if $page > 1}
-                        <a href="/category/{$category.id}?sort={$sort}&amp;page={$page-1}">← Назад</a>
+        {if $totalPages > 1}
+            <nav class="pagination" aria-label="Пагинация">
+                {if $page > 1}
+                    <a href="/category/{$category.id}?sort={$sort}&amp;page={$page-1}">← Назад</a>
+                {/if}
+
+                {for $i=1 to $totalPages}
+                    {if $i == $page}
+                        <span class="is-current">{$i}</span>
+                    {else}
+                        <a href="/category/{$category.id}?sort={$sort}&amp;page={$i}">{$i}</a>
                     {/if}
+                {/for}
 
-                    {for $i=1 to $totalPages}
-                        {if $i == $page}
-                            <span class="is-current">{$i}</span>
-                        {else}
-                            <a href="/category/{$category.id}?sort={$sort}&amp;page={$i}">{$i}</a>
-                        {/if}
-                    {/for}
-
-                    {if $page < $totalPages}
-                        <a href="/category/{$category.id}?sort={$sort}&amp;page={$page+1}">Вперёд →</a>
-                    {/if}
-                </nav>
-            {/if}
+                {if $page < $totalPages}
+                    <a href="/category/{$category.id}?sort={$sort}&amp;page={$page+1}">Вперёд →</a>
+                {/if}
+            </nav>
         {/if}
     </div>
 {/block}

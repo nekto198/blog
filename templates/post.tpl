@@ -13,13 +13,11 @@
         <div class="post-page__meta">
             <time datetime="{$post.created_at}">{$post.created_at|date_format:"%d.%m.%Y %H:%M"}</time>
             <span>{$post.views} просмотров</span>
-            {if $categories|@count > 0}
-                <span class="post-page__cats">
-                    {foreach $categories as $cat}
-                        <a href="/category/{$cat.id}">{$cat.name}</a>{if !$cat@last}, {/if}
-                    {/foreach}
-                </span>
-            {/if}
+            {foreach $categories as $cat}
+                {if $cat@first}<span class="post-page__cats">{/if}
+                <a href="/category/{$cat.id}">{$cat.name}</a>{if !$cat@last}, {/if}
+                {if $cat@last}</span>{/if}
+            {/foreach}
         </div>
 
         {if $post.description}
@@ -29,14 +27,16 @@
         <div class="post-page__content">{$post.content}</div>
     </article>
 
-    {if $related|@count > 0}
-        <section class="related">
-            <h2>Похожие статьи</h2>
-            <div class="posts-grid">
-                {foreach $related as $post}
-                    {include file='partials/post-card.tpl' post=$post}
-                {/foreach}
-            </div>
-        </section>
-    {/if}
+    {foreach $related as $relatedPost}
+        {if $relatedPost@first}
+            <section class="related">
+                <h2>Похожие статьи</h2>
+                <div class="posts-grid">
+        {/if}
+        {include file='partials/post-card.tpl' post=$relatedPost}
+        {if $relatedPost@last}
+                </div>
+            </section>
+        {/if}
+    {/foreach}
 {/block}
