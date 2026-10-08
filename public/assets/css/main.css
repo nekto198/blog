@@ -537,6 +537,12 @@ img {
   font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
+.category-page.is-loading [data-category-content] {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
 .toolbar {
   display: flex;
   flex-wrap: wrap;

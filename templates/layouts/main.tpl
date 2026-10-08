@@ -71,5 +71,6 @@
             });
         })();
     </script>
+    {block name="scripts"}{/block}
 </body>
 </html>
