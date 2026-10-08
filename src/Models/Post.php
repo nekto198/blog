@@ -52,7 +52,7 @@ class Post
             FROM posts p
             INNER JOIN post_categories pc ON pc.post_id = p.id
             WHERE pc.category_id = :category_id
-            ORDER BY p.created_at DESC
+            ORDER BY p.created_at DESC, p.id DESC
             LIMIT :limit
         ');
         $stmt->bindValue('category_id', $categoryId, PDO::PARAM_INT);
@@ -68,7 +68,9 @@ class Post
         int $page = 1,
         int $perPage = 6
     ): array {
-        $orderBy = $sort === 'views' ? 'p.views DESC' : 'p.created_at DESC';
+        $orderBy = $sort === 'views'
+            ? 'p.views DESC, p.created_at DESC, p.id DESC'
+            : 'p.created_at DESC, p.id DESC';
         $offset = max(0, ($page - 1) * $perPage);
 
         $stmt = $this->db->prepare("
@@ -202,7 +204,7 @@ class Post
             )
             AND p.id != :post_id2
             GROUP BY p.id, p.title, p.slug, p.description, p.image, p.views, p.created_at
-            ORDER BY p.views DESC, p.created_at DESC
+            ORDER BY p.created_at DESC, p.id DESC
             LIMIT :limit
         ');
         $stmt->bindValue('post_id', $postId, PDO::PARAM_INT);

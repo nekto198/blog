@@ -12,7 +12,7 @@
             <p class="post-card__desc">{$post.description}</p>
         {/if}
         <div class="post-card__meta">
-            <time datetime="{$post.created_at}">{$post.created_at|date_format:"%d.%m.%Y"}</time>
+            <time datetime="{$post.created_at}">{$post.created_at|date_format:"%d.%m.%Y %H:%M"}</time>
             <span>{$post.views} просмотров</span>
         </div>
     </div>
