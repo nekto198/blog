@@ -223,7 +223,7 @@ $posts = [
 ];
 
 /**
- * Create a simple placeholder JPEG for a post.
+ * Create a clean gradient placeholder (no text — GD built-in fonts break Cyrillic).
  */
 function createPlaceholderImage(string $path, string $title, array $rgb): void
 {
@@ -231,18 +231,28 @@ function createPlaceholderImage(string $path, string $title, array $rgb): void
     $height = 450;
     $image = imagecreatetruecolor($width, $height);
 
-    $bg = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
-    $white = imagecolorallocate($image, 255, 255, 255);
-    imagefilledrectangle($image, 0, 0, $width, $height, $bg);
+    $r = $rgb[0];
+    $g = $rgb[1];
+    $b = $rgb[2];
 
-    $label = mb_substr($title, 0, 40);
-    $font = 5;
-    $textWidth = imagefontwidth($font) * strlen($label);
-    $x = (int) (($width - $textWidth) / 2);
-    $y = (int) (($height - imagefontheight($font)) / 2);
-    imagestring($image, $font, max(20, $x), $y, $label, $white);
+    for ($y = 0; $y < $height; $y++) {
+        $t = $y / ($height - 1);
+        $color = imagecolorallocate(
+            $image,
+            (int) max(0, min(255, $r + (255 - $r) * $t * 0.35)),
+            (int) max(0, min(255, $g + (255 - $g) * $t * 0.35)),
+            (int) max(0, min(255, $b + (255 - $b) * $t * 0.35))
+        );
+        imageline($image, 0, $y, $width, $y, $color);
+    }
 
-    imagejpeg($image, $path, 85);
+    // Soft circle accent, no text
+    $overlay = imagecolorallocatealpha($image, 255, 255, 255, 100);
+    imagefilledellipse($image, (int) ($width * 0.75), (int) ($height * 0.3), 280, 280, $overlay);
+    $overlay2 = imagecolorallocatealpha($image, 0, 0, 0, 110);
+    imagefilledellipse($image, (int) ($width * 0.2), (int) ($height * 0.8), 220, 220, $overlay2);
+
+    imagejpeg($image, $path, 88);
     imagedestroy($image);
 }
 
