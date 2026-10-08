@@ -27,6 +27,34 @@
         <div class="post-page__content">{$post.content}</div>
     </article>
 
+    {if $prevPost || $nextPost}
+        <nav class="post-adjacent" aria-label="Статьи в категории">
+            {if $prevPost}
+                <a class="post-adjacent__link post-adjacent__link--prev" href="/{$category.slug}/{$prevPost.slug}">
+                    <span class="post-adjacent__arrow" aria-hidden="true">←</span>
+                    <span class="post-adjacent__text">
+                        <span class="post-adjacent__label">Предыдущая</span>
+                        <span class="post-adjacent__title">{$prevPost.title}</span>
+                    </span>
+                </a>
+            {else}
+                <span class="post-adjacent__link post-adjacent__link--empty"></span>
+            {/if}
+
+            {if $nextPost}
+                <a class="post-adjacent__link post-adjacent__link--next" href="/{$category.slug}/{$nextPost.slug}">
+                    <span class="post-adjacent__text">
+                        <span class="post-adjacent__label">Следующая</span>
+                        <span class="post-adjacent__title">{$nextPost.title}</span>
+                    </span>
+                    <span class="post-adjacent__arrow" aria-hidden="true">→</span>
+                </a>
+            {else}
+                <span class="post-adjacent__link post-adjacent__link--empty"></span>
+            {/if}
+        </nav>
+    {/if}
+
     {foreach $related as $relatedPost}
         {if $relatedPost@first}
             <section class="related">

@@ -35,6 +35,11 @@ class PostController
 
         $categories = $postModel->getCategories($postId);
         $related = $postModel->getRelated($postId, (int) $app['related_posts_limit']);
+        $adjacent = $postModel->getAdjacentInCategory(
+            $postId,
+            (int) $category['id'],
+            (string) $post['created_at']
+        );
 
         (new View())->render('post.tpl', [
             'pageTitle' => $post['title'],
@@ -42,6 +47,8 @@ class PostController
             'category' => $category,
             'categories' => $categories,
             'related' => $related,
+            'prevPost' => $adjacent['previous'],
+            'nextPost' => $adjacent['next'],
         ]);
     }
 }

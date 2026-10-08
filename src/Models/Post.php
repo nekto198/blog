@@ -120,6 +120,60 @@ class Post
     }
 
     /**
+     * Adjacent posts in a category by publication date.
+     * previous = older, next = newer.
+     *
+     * @return array{previous: ?array, next: ?array}
+     */
+    public function getAdjacentInCategory(int $postId, int $categoryId, string $createdAt): array
+    {
+        $previousStmt = $this->db->prepare('
+            SELECT p.id, p.title, p.slug, p.created_at
+            FROM posts p
+            INNER JOIN post_categories pc ON pc.post_id = p.id
+            WHERE pc.category_id = :category_id
+              AND (
+                  p.created_at < :created_at
+                  OR (p.created_at = :created_at2 AND p.id < :post_id)
+              )
+            ORDER BY p.created_at DESC, p.id DESC
+            LIMIT 1
+        ');
+        $previousStmt->execute([
+            'category_id' => $categoryId,
+            'created_at' => $createdAt,
+            'created_at2' => $createdAt,
+            'post_id' => $postId,
+        ]);
+        $previous = $previousStmt->fetch() ?: null;
+
+        $nextStmt = $this->db->prepare('
+            SELECT p.id, p.title, p.slug, p.created_at
+            FROM posts p
+            INNER JOIN post_categories pc ON pc.post_id = p.id
+            WHERE pc.category_id = :category_id
+              AND (
+                  p.created_at > :created_at
+                  OR (p.created_at = :created_at2 AND p.id > :post_id)
+              )
+            ORDER BY p.created_at ASC, p.id ASC
+            LIMIT 1
+        ');
+        $nextStmt->execute([
+            'category_id' => $categoryId,
+            'created_at' => $createdAt,
+            'created_at2' => $createdAt,
+            'post_id' => $postId,
+        ]);
+        $next = $nextStmt->fetch() ?: null;
+
+        return [
+            'previous' => $previous,
+            'next' => $next,
+        ];
+    }
+
+    /**
      * Related posts with a primary category slug for building URLs.
      */
     public function getRelated(int $postId, int $limit = 3): array
