@@ -19,7 +19,7 @@
         {if $total == 0}
             <p class="empty">В этой категории пока нет статей.</p>
         {else}
-            <div class="posts-grid">
+            <div class="posts-grid posts-grid--three">
                 {foreach $posts as $post}
                     {include file='partials/post-card.tpl' post=$post categorySlug=$category.slug}
                 {/foreach}

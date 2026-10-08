@@ -466,7 +466,7 @@ img {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.25rem;
 }
-.posts-grid--home {
+.posts-grid--home, .posts-grid--three {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -780,7 +780,8 @@ img {
 }
 
 @media (max-width: 900px) {
-  .posts-grid--home {
+  .posts-grid--home,
+  .posts-grid--three {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -791,7 +792,8 @@ img {
   .site-main {
     padding-top: 1.5rem;
   }
-  .posts-grid--home {
+  .posts-grid--home,
+  .posts-grid--three {
     grid-template-columns: 1fr;
   }
   .post-adjacent {
