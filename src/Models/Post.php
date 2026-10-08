@@ -175,6 +175,33 @@ class Post
         ];
     }
 
+    public function getPopular(int $limit = 5): array
+    {
+        $stmt = $this->db->prepare('
+            SELECT
+                p.id,
+                p.title,
+                p.slug,
+                p.views,
+                p.created_at,
+                (
+                    SELECT c.slug
+                    FROM categories c
+                    INNER JOIN post_categories pc2 ON pc2.category_id = c.id
+                    WHERE pc2.post_id = p.id
+                    ORDER BY c.name ASC
+                    LIMIT 1
+                ) AS category_slug
+            FROM posts p
+            ORDER BY p.views DESC, p.created_at DESC, p.id DESC
+            LIMIT :limit
+        ');
+        $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
     /**
      * Related posts with a primary category slug for building URLs.
      */

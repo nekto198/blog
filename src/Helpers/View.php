@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Helpers;
 
 use App\Models\Category;
+use App\Models\Post;
 use Smarty\Smarty;
 
 class View
@@ -24,6 +25,7 @@ class View
         $app = require $root . '/config/app.php';
         $this->smarty->assign('appName', $app['name']);
         $this->smarty->assign('menuCategories', (new Category())->findWithPosts());
+        $this->smarty->assign('sidebarPopular', (new Post())->getPopular(5));
 
         $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
         $path = rtrim($path, '/') ?: '/';
