@@ -13,7 +13,20 @@
     <header class="site-header">
         <div class="container">
             <a href="/" class="logo">{$appName}</a>
-            <nav class="site-nav">
+
+            <button
+                type="button"
+                class="nav-toggle"
+                aria-expanded="false"
+                aria-controls="site-nav"
+                aria-label="Открыть меню"
+            >
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+                <span class="nav-toggle__bar"></span>
+            </button>
+
+            <nav id="site-nav" class="site-nav">
                 <a href="/">Главная</a>
                 {foreach $menuCategories as $menuCategory}
                     <a href="/{$menuCategory.slug}">{$menuCategory.name}</a>
@@ -33,5 +46,30 @@
             <p>&copy; {$smarty.now|date_format:"%Y"} {$appName}</p>
         </div>
     </footer>
+
+    <script>
+        (function () {
+            var toggle = document.querySelector('.nav-toggle');
+            var nav = document.getElementById('site-nav');
+            if (!toggle || !nav) return;
+
+            toggle.addEventListener('click', function () {
+                var open = !nav.classList.contains('is-open');
+                nav.classList.toggle('is-open', open);
+                toggle.classList.toggle('is-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+            });
+
+            nav.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    nav.classList.remove('is-open');
+                    toggle.classList.remove('is-open');
+                    toggle.setAttribute('aria-expanded', 'false');
+                    toggle.setAttribute('aria-label', 'Открыть меню');
+                });
+            });
+        })();
+    </script>
 </body>
 </html>
