@@ -27,9 +27,9 @@
             </button>
 
             <nav id="site-nav" class="site-nav">
-                <a href="/">Главная</a>
+                <a href="/"{if $isHome} class="is-active" aria-current="page"{/if}>Главная</a>
                 {foreach $menuCategories as $menuCategory}
-                    <a href="/{$menuCategory.slug}">{$menuCategory.name}</a>
+                    <a href="/{$menuCategory.slug}"{if $activeCategorySlug == $menuCategory.slug} class="is-active" aria-current="page"{/if}>{$menuCategory.name}</a>
                 {/foreach}
             </nav>
         </div>

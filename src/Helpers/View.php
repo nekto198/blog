@@ -24,6 +24,13 @@ class View
         $app = require $root . '/config/app.php';
         $this->smarty->assign('appName', $app['name']);
         $this->smarty->assign('menuCategories', (new Category())->findWithPosts());
+
+        $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+        $path = rtrim($path, '/') ?: '/';
+        $segments = $path === '/' ? [] : explode('/', ltrim($path, '/'));
+
+        $this->smarty->assign('isHome', $path === '/');
+        $this->smarty->assign('activeCategorySlug', $segments[0] ?? null);
     }
 
     public function render(string $template, array $data = []): void
