@@ -16,7 +16,7 @@
                 <a class="btn" href="/{$section.category.slug}">Все статьи</a>
             </div>
 
-            <div class="posts-grid">
+            <div class="posts-grid posts-grid--home">
                 {foreach $section.posts as $post}
                     {include file='partials/post-card.tpl' post=$post categorySlug=$section.category.slug}
                 {/foreach}
