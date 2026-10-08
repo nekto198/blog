@@ -24,7 +24,7 @@
             <p class="lead">{$post.description}</p>
         {/if}
 
-        <div class="post-page__content">{$post.content}</div>
+        <div class="post-page__content">{$post.content nofilter}</div>
     </article>
 
     {if $prevPost || $nextPost}

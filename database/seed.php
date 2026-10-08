@@ -413,6 +413,76 @@ $posts = [
 ];
 
 /**
+ * Build full HTML article body from plain paragraphs.
+ */
+function buildRichContent(string $plain, string $title, string $imageSrc, string $caption): string
+{
+    $paragraphs = array_values(array_filter(array_map('trim', preg_split("/\n\s*\n/", $plain) ?: [])));
+    if ($paragraphs === []) {
+        $paragraphs = [$plain];
+    }
+
+    $first = htmlspecialchars($paragraphs[0], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $rest = array_slice($paragraphs, 1);
+    $quoteSource = $rest[0] ?? $paragraphs[0];
+    $quote = htmlspecialchars(mb_substr($quoteSource, 0, 160), ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $safeTitle = htmlspecialchars($title, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $safeCaption = htmlspecialchars($caption, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    $safeImage = htmlspecialchars($imageSrc, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+
+    $middleHtml = '';
+    foreach (array_slice($rest, 0, 2) as $paragraph) {
+        $middleHtml .= '<p>' . htmlspecialchars($paragraph, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+    }
+
+    $endingHtml = '';
+    foreach (array_slice($rest, 2) as $paragraph) {
+        $endingHtml .= '<p>' . htmlspecialchars($paragraph, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . '</p>';
+    }
+
+    return <<<HTML
+<p class="article-lead">{$first}</p>
+
+<h2>Ключевые моменты</h2>
+<ul>
+    <li>Сформулируйте цель заранее — так проще отсечь лишнее.</li>
+    <li>Проверяйте факты и источники, даже если тема кажется знакомой.</li>
+    <li>Делайте маленькие шаги: один понятный вывод лучше десятка общих фраз.</li>
+    <li>Возвращайтесь к материалу через пару дней — свежий взгляд ловит слабые места.</li>
+</ul>
+
+<figure class="article-figure">
+    <img src="{$safeImage}" alt="{$safeTitle}">
+    <figcaption>{$safeCaption}</figcaption>
+</figure>
+
+<h2>Пошаговый план</h2>
+<ol>
+    <li>Соберите исходные данные и коротко зафиксируйте контекст.</li>
+    <li>Выделите 2–3 действия, которые дадут заметный результат.</li>
+    <li>Проверьте результат на практике и скорректируйте подход.</li>
+    <li>Запишите выводы, чтобы в следующий раз начать быстрее.</li>
+</ol>
+
+<blockquote>
+    <p>«{$quote}»</p>
+    <cite>Из материала «{$safeTitle}»</cite>
+</blockquote>
+
+<h2>На что обратить внимание</h2>
+{$middleHtml}
+<p>Ниже — практические ориентиры, которые помогают не потерять фокус по ходу чтения и применения идей статьи.</p>
+<ul>
+    <li><strong>Контекст:</strong> не копируйте советы вслепую — адаптируйте под свою ситуацию.</li>
+    <li><strong>Ритм:</strong> лучше регулярность, чем редкие рывки «на максимуме».</li>
+    <li><strong>Обратная связь:</strong> сверяйтесь с результатом, а не только с планом.</li>
+</ul>
+{$endingHtml}
+<p>Если кратко: берите из статьи одно действие на ближайшие дни и доведите его до конца — так материал становится навыком, а не просто текстом.</p>
+HTML;
+}
+
+/**
  * Create a clean gradient placeholder (no text — GD built-in fonts break Cyrillic).
  */
 function createPlaceholderImage(string $path, string $title, array $rgb): void
@@ -456,8 +526,17 @@ $insertPivot = $pdo->prepare('
 
 foreach ($posts as $index => $post) {
     $filename = 'post-' . ($index + 1) . '.jpg';
+    $inlineFilename = 'post-' . ($index + 1) . '-inline.jpg';
     $fullPath = $uploadsDir . '/' . $filename;
+    $inlinePath = $uploadsDir . '/' . $inlineFilename;
+
     createPlaceholderImage($fullPath, $post['title'], $post['color']);
+    $inlineColor = [
+        min(255, $post['color'][0] + 25),
+        min(255, $post['color'][1] + 15),
+        max(0, $post['color'][2] - 10),
+    ];
+    createPlaceholderImage($inlinePath, $post['title'], $inlineColor);
 
     $slug = Slugger::unique($post['title']);
     $createdAt = (new DateTimeImmutable('now'))
@@ -465,11 +544,18 @@ foreach ($posts as $index => $post) {
         ->modify('-' . ($index * 3) . ' hours')
         ->format('Y-m-d H:i:s');
 
+    $content = buildRichContent(
+        $post['content'],
+        $post['title'],
+        '/uploads/' . $inlineFilename,
+        $post['description'] ?: ('Иллюстрация к материалу «' . $post['title'] . '»')
+    );
+
     $insertPost->execute([
         'title' => $post['title'],
         'slug' => $slug,
         'description' => $post['description'],
-        'content' => $post['content'],
+        'content' => $content,
         'image' => '/uploads/' . $filename,
         'views' => $post['views'],
         'created_at' => $createdAt,
