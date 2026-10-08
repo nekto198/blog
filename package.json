@@ -1,0 +1,11 @@
+{
+  "name": "simple-blog",
+  "private": true,
+  "scripts": {
+    "build:css": "sass scss/main.scss public/assets/css/main.css --style=expanded --no-source-map",
+    "watch:css": "sass --watch scss/main.scss:public/assets/css/main.css --style=expanded --no-source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.69.5"
+  }
+}
