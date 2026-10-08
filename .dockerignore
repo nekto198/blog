@@ -1,0 +1,12 @@
+.git
+.gitignore
+node_modules
+vendor
+templates_c/*
+!templates_c/.gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
+.DS_Store
+*.log
+README.md
+package-lock.json

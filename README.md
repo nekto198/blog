@@ -1,24 +1,24 @@
 # Простой блог на PHP + Smarty + MySQL
 
-Небольшой учебный блог с категориями и статьями. Без фреймворков: чистый PHP 8.1+, Smarty и MySQL.
+Учебный блог с категориями и статьями. Без фреймворков: чистый PHP 8.1+, Smarty и MySQL.
 
 ## Возможности
 
-- Главная: категории со статьями и 3 последних поста в каждой
-- Страница категории: список статей, сортировка (дата / просмотры), пагинация
-- Страница статьи: полный текст, счётчик просмотров, блок похожих статей
-- CLI-сидер категорий и постов
+- Главная: категории со статьями, по 3 последних поста и кнопка «Все статьи»
+- Категория: список, сортировка (дата / просмотры), пагинация по 6 статей
+- Статья: HTML-контент, просмотры, похожие, prev/next внутри категории
+- ЧПУ: `/{category-slug}` и `/{category-slug}/{post-slug}` (`cocur/slugify`)
+- Меню категорий, хлебные крошки, сайдбар на странице статьи
+- CLI-сидер категорий, постов и картинок
 
 ## Стек
 
-- PHP 8.2 (FPM)
-- Smarty 5
-- MySQL 8
-- Nginx
-- SCSS (компиляция в CSS)
+- PHP 8.2 (FPM) + Smarty 5 + MySQL 8 + Nginx
+- SCSS → CSS
 - Docker Compose
+- `cocur/slugify`
 
-## Быстрый старт (Docker)
+## Быстрый старт
 
 ```bash
 docker compose up -d --build
@@ -26,9 +26,11 @@ docker compose exec php composer install
 docker compose exec php php database/seed.php
 ```
 
-Сайт: [http://localhost:8088](http://localhost:8088)
+Сайт: http://localhost:8088  
 
-MySQL с хоста: `localhost:3308` (user/password/db: `blog` / `blog` / `blog`)
+MySQL с хоста: `localhost:3308` (user / password / db: `blog` / `blog` / `blog`)
+
+Если порты `8088` или `3308` заняты — поменяйте их в `docker-compose.yml`.
 
 ## Стили
 
@@ -37,29 +39,19 @@ npm install
 npm run build:css
 ```
 
-Исходники: `scss/main.scss` → `public/assets/css/main.css`
+`scss/main.scss` → `public/assets/css/main.css`
 
 ## Структура
 
 ```
-public/          # document root (index.php, assets, uploads)
-config/          # app and database config
-src/             # Router, Database, Controllers, Models, View
-templates/       # Smarty templates
-database/        # schema.sql, seed.php
-docker/          # PHP and Nginx configs
-scss/            # SCSS sources
+public/       # document root (index.php, assets, uploads)
+config/       # app + database
+src/          # Router, Database, Controllers, Models, Helpers
+templates/    # Smarty
+database/     # schema.sql, seed.php
+docker/       # PHP и Nginx
+scss/         # исходники стилей
 ```
-
-## Использование ИИ
-
-При выполнении задания использовался ИИ-ассистент (Cursor) для:
-
-- черновика структуры проекта и Docker-окружения;
-- черновика SQL-схемы и сидера с тестовыми данными;
-- помощи со SCSS и README.
-
-Итоговая архитектура, код моделей/контроллеров, шаблоны и правки принимались и дорабатывались вручную. Коммиты отражают поэтапный ход разработки.
 
 ## Маршруты
 
@@ -69,4 +61,13 @@ scss/            # SCSS sources
 | `/{category-slug}?sort=date\|views&page=N` | Категория |
 | `/{category-slug}/{post-slug}` | Статья |
 
-Slug генерируются через библиотеку `cocur/slugify` (кириллица → латиница).
+## Использование ИИ
+
+При выполнении задания использовался ИИ-ассистент (Cursor) для:
+
+- черновика структуры проекта и Docker-окружения;
+- черновика SQL-схемы и сидера;
+- вёрстки, SCSS и README;
+- отладки и доработок по ходу проверки.
+
+Итоговые решения, структура кода и правки принимались осознанно; коммиты отражают поэтапную разработку.

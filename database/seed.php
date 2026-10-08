@@ -19,6 +19,12 @@ if (!is_dir($uploadsDir)) {
     mkdir($uploadsDir, 0775, true);
 }
 
+foreach (glob($uploadsDir . '/*') ?: [] as $file) {
+    if (is_file($file) && basename($file) !== '.gitkeep') {
+        unlink($file);
+    }
+}
+
 echo "Clearing tables...\n";
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
 $pdo->exec('TRUNCATE TABLE post_categories');
