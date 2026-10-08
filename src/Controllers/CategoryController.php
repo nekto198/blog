@@ -10,13 +10,13 @@ use App\Models\Post;
 
 class CategoryController
 {
-    public function show(int $id): void
+    public function show(string $slug): void
     {
         $app = require dirname(__DIR__, 2) . '/config/app.php';
         $categoryModel = new Category();
         $postModel = new Post();
 
-        $category = $categoryModel->findById($id);
+        $category = $categoryModel->findBySlug($slug);
         if ($category === null) {
             http_response_code(404);
             echo 'Категория не найдена';
@@ -26,15 +26,16 @@ class CategoryController
         $sort = ($_GET['sort'] ?? 'date') === 'views' ? 'views' : 'date';
         $page = max(1, (int) ($_GET['page'] ?? 1));
         $perPage = (int) $app['posts_per_page'];
+        $categoryId = (int) $category['id'];
 
-        $total = $postModel->countByCategory($id);
+        $total = $postModel->countByCategory($categoryId);
         $totalPages = max(1, (int) ceil($total / $perPage));
 
         if ($page > $totalPages) {
             $page = $totalPages;
         }
 
-        $posts = $postModel->getByCategory($id, $sort, $page, $perPage);
+        $posts = $postModel->getByCategory($categoryId, $sort, $page, $perPage);
 
         (new View())->render('category.tpl', [
             'pageTitle' => $category['name'],

@@ -66,5 +66,7 @@ scss/            # SCSS sources
 | URL | Описание |
 |-----|----------|
 | `/` | Главная |
-| `/category/{id}?sort=date\|views&page=N` | Категория |
-| `/post/{id}` | Статья |
+| `/{category-slug}?sort=date\|views&page=N` | Категория |
+| `/{category-slug}/{post-slug}` | Статья |
+
+Slug генерируются через библиотеку `cocur/slugify` (кириллица → латиница).

@@ -16,23 +16,39 @@ class Post
         $this->db = Database::getConnection();
     }
 
-    public function findById(int $id): ?array
+    public function findBySlug(string $slug): ?array
     {
         $stmt = $this->db->prepare('
-            SELECT id, title, description, content, image, views, created_at
+            SELECT id, title, slug, description, content, image, views, created_at
             FROM posts
-            WHERE id = :id
+            WHERE slug = :slug
         ');
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(['slug' => $slug]);
         $row = $stmt->fetch();
 
         return $row ?: null;
     }
 
+    public function belongsToCategory(int $postId, int $categoryId): bool
+    {
+        $stmt = $this->db->prepare('
+            SELECT 1
+            FROM post_categories
+            WHERE post_id = :post_id AND category_id = :category_id
+            LIMIT 1
+        ');
+        $stmt->execute([
+            'post_id' => $postId,
+            'category_id' => $categoryId,
+        ]);
+
+        return (bool) $stmt->fetchColumn();
+    }
+
     public function getLatestByCategory(int $categoryId, int $limit = 3): array
     {
         $stmt = $this->db->prepare('
-            SELECT p.id, p.title, p.description, p.image, p.views, p.created_at
+            SELECT p.id, p.title, p.slug, p.description, p.image, p.views, p.created_at
             FROM posts p
             INNER JOIN post_categories pc ON pc.post_id = p.id
             WHERE pc.category_id = :category_id
@@ -56,7 +72,7 @@ class Post
         $offset = max(0, ($page - 1) * $perPage);
 
         $stmt = $this->db->prepare("
-            SELECT p.id, p.title, p.description, p.image, p.views, p.created_at
+            SELECT p.id, p.title, p.slug, p.description, p.image, p.views, p.created_at
             FROM posts p
             INNER JOIN post_categories pc ON pc.post_id = p.id
             WHERE pc.category_id = :category_id
@@ -86,7 +102,7 @@ class Post
     public function getCategories(int $postId): array
     {
         $stmt = $this->db->prepare('
-            SELECT c.id, c.name
+            SELECT c.id, c.name, c.slug
             FROM categories c
             INNER JOIN post_categories pc ON pc.category_id = c.id
             WHERE pc.post_id = :post_id
@@ -103,16 +119,35 @@ class Post
         $stmt->execute(['id' => $postId]);
     }
 
+    /**
+     * Related posts with a primary category slug for building URLs.
+     */
     public function getRelated(int $postId, int $limit = 3): array
     {
         $stmt = $this->db->prepare('
-            SELECT DISTINCT p.id, p.title, p.description, p.image, p.views, p.created_at
+            SELECT
+                p.id,
+                p.title,
+                p.slug,
+                p.description,
+                p.image,
+                p.views,
+                p.created_at,
+                (
+                    SELECT c.slug
+                    FROM categories c
+                    INNER JOIN post_categories pc2 ON pc2.category_id = c.id
+                    WHERE pc2.post_id = p.id
+                    ORDER BY c.name ASC
+                    LIMIT 1
+                ) AS category_slug
             FROM posts p
             INNER JOIN post_categories pc ON pc.post_id = p.id
             WHERE pc.category_id IN (
                 SELECT category_id FROM post_categories WHERE post_id = :post_id
             )
             AND p.id != :post_id2
+            GROUP BY p.id, p.title, p.slug, p.description, p.image, p.views, p.created_at
             ORDER BY p.views DESC, p.created_at DESC
             LIMIT :limit
         ');

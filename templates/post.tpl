@@ -15,7 +15,7 @@
             <span>{$post.views} просмотров</span>
             {foreach $categories as $cat}
                 {if $cat@first}<span class="post-page__cats">{/if}
-                <a href="/category/{$cat.id}">{$cat.name}</a>{if !$cat@last}, {/if}
+                <a href="/{$cat.slug}">{$cat.name}</a>{if !$cat@last}, {/if}
                 {if $cat@last}</span>{/if}
             {/foreach}
         </div>
@@ -33,7 +33,7 @@
                 <h2>Похожие статьи</h2>
                 <div class="posts-grid">
         {/if}
-        {include file='partials/post-card.tpl' post=$relatedPost}
+        {include file='partials/post-card.tpl' post=$relatedPost categorySlug=$relatedPost.category_slug}
         {if $relatedPost@last}
                 </div>
             </section>

@@ -1,12 +1,12 @@
 <article class="post-card">
     {if $post.image}
-        <a href="/post/{$post.id}" class="post-card__image">
+        <a href="/{$categorySlug}/{$post.slug}" class="post-card__image">
             <img src="{$post.image}" alt="{$post.title}">
         </a>
     {/if}
     <div class="post-card__body">
         <h3 class="post-card__title">
-            <a href="/post/{$post.id}">{$post.title}</a>
+            <a href="/{$categorySlug}/{$post.slug}">{$post.title}</a>
         </h3>
         {if $post.description}
             <p class="post-card__desc">{$post.description}</p>

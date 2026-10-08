@@ -15,12 +15,13 @@ $router->get('/', static function (): void {
     (new HomeController())->index();
 });
 
-$router->get('/category/{id}', static function (string $id): void {
-    (new CategoryController())->show((int) $id);
+// More specific route first: /category-slug/post-slug
+$router->get('/{categorySlug}/{postSlug}', static function (string $categorySlug, string $postSlug): void {
+    (new PostController())->show($categorySlug, $postSlug);
 });
 
-$router->get('/post/{id}', static function (string $id): void {
-    (new PostController())->show((int) $id);
+$router->get('/{categorySlug}', static function (string $categorySlug): void {
+    (new CategoryController())->show($categorySlug);
 });
 
 $router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'] ?? '/');

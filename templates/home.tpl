@@ -12,12 +12,12 @@
                         <p class="category-section__desc">{$section.category.description}</p>
                     {/if}
                 </div>
-                <a class="btn" href="/category/{$section.category.id}">Все статьи</a>
+                <a class="btn" href="/{$section.category.slug}">Все статьи</a>
             </div>
 
             <div class="posts-grid">
                 {foreach $section.posts as $post}
-                    {include file='partials/post-card.tpl' post=$post}
+                    {include file='partials/post-card.tpl' post=$post categorySlug=$section.category.slug}
                 {/foreach}
             </div>
         </section>

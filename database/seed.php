@@ -10,6 +10,7 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 use App\Database;
+use App\Helpers\Slugger;
 
 $pdo = Database::getConnection();
 $uploadsDir = dirname(__DIR__) . '/public/uploads';
@@ -24,6 +25,8 @@ $pdo->exec('TRUNCATE TABLE post_categories');
 $pdo->exec('TRUNCATE TABLE posts');
 $pdo->exec('TRUNCATE TABLE categories');
 $pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+
+Slugger::reset();
 
 $categories = [
     [
@@ -49,12 +52,19 @@ $categories = [
 ];
 
 $categoryIds = [];
-$insertCategory = $pdo->prepare('INSERT INTO categories (name, description) VALUES (:name, :description)');
+$insertCategory = $pdo->prepare(
+    'INSERT INTO categories (name, slug, description) VALUES (:name, :slug, :description)'
+);
 
 foreach ($categories as $category) {
-    $insertCategory->execute($category);
+    $slug = Slugger::unique($category['name']);
+    $insertCategory->execute([
+        'name' => $category['name'],
+        'slug' => $slug,
+        'description' => $category['description'],
+    ]);
     $categoryIds[] = (int) $pdo->lastInsertId();
-    echo "Category: {$category['name']}\n";
+    echo "Category: {$category['name']} ({$slug})\n";
 }
 
 $posts = [
@@ -437,8 +447,8 @@ function createPlaceholderImage(string $path, string $title, array $rgb): void
 }
 
 $insertPost = $pdo->prepare('
-    INSERT INTO posts (title, description, content, image, views, created_at)
-    VALUES (:title, :description, :content, :image, :views, :created_at)
+    INSERT INTO posts (title, slug, description, content, image, views, created_at)
+    VALUES (:title, :slug, :description, :content, :image, :views, :created_at)
 ');
 $insertPivot = $pdo->prepare('
     INSERT INTO post_categories (post_id, category_id) VALUES (:post_id, :category_id)
@@ -449,6 +459,7 @@ foreach ($posts as $index => $post) {
     $fullPath = $uploadsDir . '/' . $filename;
     createPlaceholderImage($fullPath, $post['title'], $post['color']);
 
+    $slug = Slugger::unique($post['title']);
     $createdAt = (new DateTimeImmutable('now'))
         ->modify('-' . $post['days_ago'] . ' days')
         ->modify('-' . ($index * 3) . ' hours')
@@ -456,6 +467,7 @@ foreach ($posts as $index => $post) {
 
     $insertPost->execute([
         'title' => $post['title'],
+        'slug' => $slug,
         'description' => $post['description'],
         'content' => $post['content'],
         'image' => '/uploads/' . $filename,
@@ -472,7 +484,7 @@ foreach ($posts as $index => $post) {
         ]);
     }
 
-    echo "Post: {$post['title']}\n";
+    echo "Post: {$post['title']} ({$slug})\n";
 }
 
 echo "Done. Seeded " . count($categories) . " categories and " . count($posts) . " posts.\n";
