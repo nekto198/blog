@@ -606,9 +606,13 @@ img {
   margin-bottom: 1.25rem;
 }
 
+.post-page__body {
+  margin-top: 0.5rem;
+}
+
 .post-page__content {
   font-size: 1.08rem;
-  max-width: 42rem;
+  max-width: none;
 }
 .post-page__content > *:first-child {
   margin-top: 0;
